@@ -2,7 +2,7 @@ import { StoreConfig, Product, OrderNotification } from '../types'
 
 class WooCommerceAPI {
   private static instance: WooCommerceAPI
-  private baseUrl: string = ''
+  // private baseUrl: string = '' // 暂时注释掉未使用的变量
 
   private constructor() {}
 
@@ -14,19 +14,20 @@ class WooCommerceAPI {
   }
 
   // 设置基础URL
-  setBaseUrl(url: string): void {
-    this.baseUrl = url.replace(/\/$/, '') // 移除末尾的斜杠
+  setBaseUrl(_url: string): void {
+    // 在实际实现中，这里会设置基础URL
+    // this.baseUrl = url.replace(/\/$/, '') // 移除末尾的斜杠
   }
 
   // 设置认证信息
-  setAuth(store: StoreConfig): void {
+  setAuth(_store: StoreConfig): void {
     // 在实际实现中，这里会设置认证头信息
     // 对于WordPress认证，使用Authorization头
     // 对于WooCommerce认证，使用consumer key和secret
   }
 
   // 测试店铺连接
-  async testConnection(store: StoreConfig): Promise<boolean> {
+  async testConnection(_store: StoreConfig): Promise<boolean> {
     try {
       // 模拟API调用
       await new Promise(resolve => setTimeout(resolve, 500))
@@ -37,7 +38,7 @@ class WooCommerceAPI {
   }
 
   // 获取商品列表
-  async getProducts(store: StoreConfig, params?: any): Promise<Product[]> {
+  async getProducts(_store: StoreConfig, _params?: any): Promise<Product[]> {
     try {
       // 模拟API调用
       await new Promise(resolve => setTimeout(resolve, 500))
@@ -48,7 +49,7 @@ class WooCommerceAPI {
   }
 
   // 创建商品
-  async createProduct(store: StoreConfig, product: Product): Promise<Product> {
+  async createProduct(_store: StoreConfig, product: Product): Promise<Product> {
     try {
       // 模拟API调用
       await new Promise(resolve => setTimeout(resolve, 500))
@@ -59,7 +60,7 @@ class WooCommerceAPI {
   }
 
   // 更新商品
-  async updateProduct(store: StoreConfig, product: Product): Promise<Product> {
+  async updateProduct(_store: StoreConfig, product: Product): Promise<Product> {
     try {
       // 模拟API调用
       await new Promise(resolve => setTimeout(resolve, 500))
@@ -70,7 +71,7 @@ class WooCommerceAPI {
   }
 
   // 删除商品
-  async deleteProduct(store: StoreConfig, productId: number): Promise<boolean> {
+  async deleteProduct(_store: StoreConfig, _productId: number): Promise<boolean> {
     try {
       // 模拟API调用
       await new Promise(resolve => setTimeout(resolve, 500))
@@ -81,7 +82,7 @@ class WooCommerceAPI {
   }
 
   // 批量更新商品状态
-  async bulkUpdateProducts(store: StoreConfig, productIds: number[], status: 'publish' | 'private' | 'draft'): Promise<boolean> {
+  async bulkUpdateProducts(_store: StoreConfig, _productIds: number[], _status: 'publish' | 'private' | 'draft'): Promise<boolean> {
     try {
       // 模拟API调用
       await new Promise(resolve => setTimeout(resolve, 500))

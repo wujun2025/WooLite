@@ -5,6 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
+    outDir: 'dist',
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         popup: 'src/popup/index.html',
@@ -16,5 +18,9 @@ export default defineConfig({
         assetFileNames: `[name].[ext]`
       }
     }
+  },
+  define: {
+    // 为不同浏览器环境定义全局变量
+    __BROWSER__: JSON.stringify('chrome')
   }
 })

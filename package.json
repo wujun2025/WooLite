@@ -1,11 +1,12 @@
 {
   "name": "woolite",
   "version": "1.0.0",
-  "description": "������WooCommerce�������",
+  "description": "轻量级WooCommerce管理插件",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:multi": "node scripts/build-multi-browser.js",
     "preview": "vite preview"
   },
   "keywords": [],

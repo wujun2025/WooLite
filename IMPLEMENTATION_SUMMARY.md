@@ -13,6 +13,7 @@ WooLite 是一个专为 WooCommerce 电商平台设计的轻量级 Chrome 扩展
    - Zustand 状态管理
    - 多语言支持（中文、英文）
    - Chrome 扩展 Manifest V3 配置
+   - 多浏览器兼容性支持
 
 2. **核心模块**
    - 店铺管理：添加、编辑、删除店铺，支持两种认证方式
@@ -24,6 +25,12 @@ WooLite 是一个专为 WooCommerce 电商平台设计的轻量级 Chrome 扩展
    - Popup 模式：简洁的弹窗界面
    - 最大化模式：提供更大的工作区域
    - 响应式设计：适配不同屏幕尺寸
+
+4. **多浏览器支持**
+   - 跨浏览器API适配层
+   - 不同浏览器的manifest文件配置
+   - 持久化存储的浏览器兼容实现
+   - 多浏览器构建脚本
 
 ### 待实现功能
 
@@ -63,7 +70,16 @@ src/
 ├── services/        # API 服务层
 ├── store/           # 状态管理
 ├── types/           # TypeScript 类型定义
-└── utils/           # 工具函数
+├── utils/           # 工具函数
+└── manifest.json    # Chrome扩展配置
+```
+
+### 多浏览器支持架构
+```
+src/
+├── manifest.json         # Chrome/Edge manifest (Manifest V3)
+├── manifest.firefox.json # Firefox manifest (Manifest V2)
+└── Info.plist           # Safari扩展配置
 ```
 
 ## 开发状态
@@ -77,3 +93,4 @@ src/
 3. 实现订单提醒功能
 4. 添加单元测试
 5. 进行性能优化
+6. 完善Safari扩展支持

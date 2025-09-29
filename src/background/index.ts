@@ -1,9 +1,11 @@
 // 后台脚本 - 处理订单提醒等后台任务
-chrome.alarms.create('orderNotificationCheck', {
+import { browserAPI } from '../utils/browserApi';
+
+browserAPI.alarms.create('orderNotificationCheck', {
   periodInMinutes: 15 // 每15分钟检查一次订单
 })
 
-chrome.alarms.onAlarm.addListener((alarm) => {
+browserAPI.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === 'orderNotificationCheck') {
     // 检查订单通知的逻辑
     checkOrderNotifications()
@@ -14,7 +16,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 async function checkOrderNotifications() {
   try {
     // 这里会实现实际的订单检查逻辑
-    // 通过chrome.storage获取店铺信息
+    // 通过browserAPI.storage获取店铺信息
     // 调用API检查每个店铺的新订单
     // 更新扩展图标上的徽章
   } catch (error) {
@@ -23,7 +25,7 @@ async function checkOrderNotifications() {
 }
 
 // 监听来自内容脚本或popup的消息
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+browserAPI.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
   switch (request.action) {
     case 'enableOrderNotification':
       // 启用订单通知

@@ -75,7 +75,7 @@ const ProductManagement: React.FC = () => {
     // 在实际实现中，这里会调用API批量更新商品状态
     const updatedProducts = products.map(product => {
       if (selectedProductIds.includes(product.id!)) {
-        return { ...product, status: 'publish' }
+        return { ...product, status: 'publish' as const }
       }
       return product
     })
@@ -88,7 +88,7 @@ const ProductManagement: React.FC = () => {
     // 在实际实现中，这里会调用API批量更新商品状态
     const updatedProducts = products.map(product => {
       if (selectedProductIds.includes(product.id!)) {
-        return { ...product, status: 'draft' }
+        return { ...product, status: 'draft' as const }
       }
       return product
     })

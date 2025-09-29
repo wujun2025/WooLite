@@ -12,6 +12,7 @@ WooLite 是一个专为 WooCommerce 电商平台设计的轻量级 Chrome 扩展
 - **功能纯粹**: 只保留最实用的商品管理功能，避免功能冗余
 - **完全免费**: 开源项目，无任何收费项目，社区驱动开发
 - **简洁直观**: 简洁的用户界面，清晰明确的操作流程
+- **多浏览器支持**: 支持Chrome、Firefox、Edge和Safari浏览器
 
 ## 技术栈
 
@@ -28,8 +29,36 @@ WooLite 是一个专为 WooCommerce 电商平台设计的轻量级 Chrome 扩展
 - 状态管理系统
 - 多语言支持
 - 开发环境配置
+- 多浏览器兼容性支持
 
 开发服务器已可正常运行，可通过 `npm run dev` 启动。
+
+## 多浏览器支持
+
+WooLite插件支持多种主流浏览器：
+
+- **Chrome/Chromium**: 基于Manifest V3的完整支持
+- **Firefox**: 基于Manifest V2的完整支持
+- **Edge**: 基于Chromium内核的完整支持
+- **Safari**: 基于Safari扩展API的支持
+
+### 构建多浏览器版本
+
+使用以下命令构建支持多浏览器的版本：
+
+```
+# 构建标准版本
+npm run build
+
+# 准备多浏览器版本
+npm run build:multi
+```
+
+构建完成后，会在 `dist` 目录下生成以下子目录：
+- `dist/chrome`: Chrome/Edge浏览器版本
+- `dist/firefox`: Firefox浏览器版本
+
+每个目录都包含相应浏览器所需的manifest文件和共享的构建产物。
 
 ## 设计文档
 
@@ -66,7 +95,7 @@ WooLite 是一个专为 WooCommerce 电商平台设计的轻量级 Chrome 扩展
 
 ### 开发环境搭建
 
-```powershell
+```
 # 进入项目目录
 cd WooLite
 
@@ -79,7 +108,7 @@ npm run dev
 
 ### 生产构建
 
-```powershell
+```
 # 构建生产版本
 npm run build
 ```
