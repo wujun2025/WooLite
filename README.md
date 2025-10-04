@@ -66,6 +66,16 @@ WooLite 是一个专为 WooCommerce 电商平台设计的轻量级 Chrome 扩展
 3. 点击"临时载入附加组件"
 4. 选择 `D:\alproject\WooLite\dist\firefox\manifest.json` 文件
 
+## 打包版本安装指引
+
+如果您下载了 `woolite-chrome-extension-v1.0.6.zip` 文件，请查看详细的 [RELEASE_NOTES.md](RELEASE_NOTES.md) 文件获取安装指引。
+
+## 支持开发者
+
+如果您觉得 WooLite 对您有帮助，欢迎通过扫描下方二维码进行打赏支持。您的支持将帮助我继续改进和维护这个项目。
+
+![打赏码](public/images/donation-qrcode.jpg)
+
 ## 多浏览器支持
 
 WooLite插件支持多种主流浏览器：
