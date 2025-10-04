@@ -1,25 +1,31 @@
 {
   "name": "woolite",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "轻量级WooCommerce管理插件",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && vite build --config vite.background.config.ts --outDir dist/temp && node scripts/merge-builds.js",
     "build:multi": "node scripts/build-multi-browser.js",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "version": "node scripts/update-version.js"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@types/react": "^19.1.15",
-    "@types/react-dom": "^19.1.9",
-    "@vitejs/plugin-react": "^5.0.4",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "typescript": "^5.9.2",
-    "vite": "^7.1.7",
-    "zustand": "^5.0.8"
+    "vite": "^5.4.8",
+    "zustand": "^4.5.0"
+  },
+  "dependencies": {
+    "antd": "^5.27.4",
+    "@ant-design/pro-components": "^2.8.10",
+    "@ant-design/icons": "^6.0.2"
   }
 }

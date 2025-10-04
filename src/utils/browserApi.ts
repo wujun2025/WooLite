@@ -1,5 +1,5 @@
 // 跨浏览器API适配层
-// 统一Chrome、Firefox、Safari扩展API的差异
+// 统一Chrome和Edge扩展API的差异
 
 // 声明全局变量类型
 declare const browser: any;
@@ -28,132 +28,55 @@ interface BrowserAPI {
   };
 }
 
-// 检测当前浏览器环境
-const getBrowserType = (): 'chrome' | 'firefox' | 'safari' => {
+// 检测当前浏览器环境 (仅支持Chrome和Edge)
+const getBrowserType = (): 'chrome' => {
   if (typeof chrome !== 'undefined' && chrome.runtime) {
     return 'chrome';
-  } else if (typeof browser !== 'undefined' && browser.runtime) {
-    return 'firefox';
-  } else if (typeof safari !== 'undefined' && safari.extension) {
-    return 'safari';
   }
   return 'chrome'; // 默认返回chrome
 };
 
-// 创建跨浏览器API适配器
+// 创建跨浏览器API适配器 (仅支持Chrome和Edge)
 const createBrowserAPI = (): BrowserAPI => {
-  const browserType = getBrowserType();
-  
-  switch (browserType) {
-    case 'firefox':
-      return {
-        storage: {
-          get: (key) => browser.storage.local.get(key),
-          set: (items) => browser.storage.local.set(items),
-          remove: (key) => browser.storage.local.remove(key)
-        },
-        notifications: {
-          create: (id, options) => browser.notifications.create(id, options)
-        },
-        alarms: {
-          create: (name, alarmInfo) => browser.alarms.create(name, alarmInfo),
-          onAlarm: {
-            addListener: (callback) => browser.alarms.onAlarm.addListener(callback)
-          }
-        },
-        runtime: {
-          onMessage: {
-            addListener: (callback) => browser.runtime.onMessage.addListener(callback)
-          },
-          sendMessage: (message) => browser.runtime.sendMessage(message)
+  // 只支持Chrome/Edge
+  return {
+    storage: {
+      get: (key) => new Promise((resolve) => {
+        chrome.storage.local.get(key, (result) => resolve(result));
+      }),
+      set: (items) => new Promise((resolve) => {
+        chrome.storage.local.set(items, () => resolve());
+      }),
+      remove: (key) => new Promise((resolve) => {
+        chrome.storage.local.remove(key, () => resolve());
+      })
+    },
+    notifications: {
+      create: (id, options) => new Promise((resolve) => {
+        chrome.notifications.create(id, options, (notificationId) => resolve(notificationId));
+      })
+    },
+    alarms: {
+      create: (name, alarmInfo) => {
+        chrome.alarms.create(name, alarmInfo);
+      },
+      onAlarm: {
+        addListener: (callback) => {
+          chrome.alarms.onAlarm.addListener(callback);
         }
-      };
-      
-    case 'safari':
-      // Safari的API实现会有所不同，这里提供基本结构
-      return {
-        storage: {
-          get: async (_key: string | string[] | Record<string, any>) => {
-            // Safari的存储API实现
-            return {};
-          },
-          set: async (_items: Record<string, any>) => {
-            // Safari的存储API实现
-          },
-          remove: async (_key: string | string[]) => {
-            // Safari的存储API实现
-          }
-        },
-        notifications: {
-          create: async (id: string, _options: any) => {
-            // Safari的通知API实现
-            return id;
-          }
-        },
-        alarms: {
-          create: (_name: string, _alarmInfo: any) => {
-            // Safari的定时器API实现
-          },
-          onAlarm: {
-            addListener: (_callback: (alarm: any) => void) => {
-              // Safari的定时器监听实现
-            }
-          }
-        },
-        runtime: {
-          onMessage: {
-            addListener: (_callback: (request: any, sender: any, sendResponse: any) => void) => {
-              // Safari的消息监听实现
-            }
-          },
-          sendMessage: async (_message: any) => {
-            // Safari的消息发送实现
-            return {};
-          }
+      }
+    },
+    runtime: {
+      onMessage: {
+        addListener: (callback) => {
+          chrome.runtime.onMessage.addListener(callback);
         }
-      };
-      
-    case 'chrome':
-    default:
-      return {
-        storage: {
-          get: (key) => new Promise((resolve) => {
-            chrome.storage.local.get(key, (result) => resolve(result));
-          }),
-          set: (items) => new Promise((resolve) => {
-            chrome.storage.local.set(items, () => resolve());
-          }),
-          remove: (key) => new Promise((resolve) => {
-            chrome.storage.local.remove(key, () => resolve());
-          })
-        },
-        notifications: {
-          create: (id, options) => new Promise((resolve) => {
-            chrome.notifications.create(id, options, (notificationId) => resolve(notificationId));
-          })
-        },
-        alarms: {
-          create: (name, alarmInfo) => {
-            chrome.alarms.create(name, alarmInfo);
-          },
-          onAlarm: {
-            addListener: (callback) => {
-              chrome.alarms.onAlarm.addListener(callback);
-            }
-          }
-        },
-        runtime: {
-          onMessage: {
-            addListener: (callback) => {
-              chrome.runtime.onMessage.addListener(callback);
-            }
-          },
-          sendMessage: (message) => new Promise((resolve) => {
-            chrome.runtime.sendMessage(message, (response) => resolve(response));
-          })
-        }
-      };
-  }
+      },
+      sendMessage: (message) => new Promise((resolve) => {
+        chrome.runtime.sendMessage(message, (response) => resolve(response));
+      })
+    }
+  };
 };
 
 // 导出浏览器API实例

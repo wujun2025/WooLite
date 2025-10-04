@@ -1,44 +1,57 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from '../hooks/useTranslation'
-import { useAppStore } from '../store'
 
 const PopupApp: React.FC = () => {
   const { t } = useTranslation()
-  const stores = useAppStore(state => state.stores)
-  const activeStoreId = useAppStore(state => state.activeStoreId)
-  const isOrderNotificationEnabled = useAppStore(state => state.isOrderNotificationEnabled)
-  
-  const activeStore = stores.find(store => store.id === activeStoreId)
+  const [status, setStatus] = useState<string>('loading')
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    console.log('PopupApp mounted')
+    try {
+      // 创建最大化窗口
+      chrome.windows.create({
+        url: chrome.runtime.getURL('src/maximized/index.html'),
+        type: 'popup',
+        width: 1200,
+        height: 800
+      }, (window) => {
+        if (chrome.runtime.lastError) {
+          console.error('Error creating window:', chrome.runtime.lastError)
+          setError(chrome.runtime.lastError.message || 'Failed to create window')
+          setStatus('error')
+          return
+        }
+        console.log('Window created:', window)
+        // 窗口创建成功后关闭popup
+        // 注意：我们不能直接关闭当前popup窗口，因为这是扩展的popup页面
+        // 我们可以尝试通过chrome.tabs API关闭当前标签页
+        if (window) {
+          // 窗口创建成功，popup会自动关闭或用户可以手动关闭
+        }
+      })
+    } catch (err) {
+      console.error('Error creating window:', err)
+      setError(err instanceof Error ? err.message : String(err))
+      setStatus('error')
+    }
+  }, [])
 
   return (
-    <div className="popup-app">
-      <header>
-        <h1>WooLite</h1>
-      </header>
-      
-      <main>
-        {activeStore ? (
-          <div className="store-info">
-            <h2>{activeStore.name}</h2>
-            <p>{activeStore.url}</p>
-          </div>
-        ) : (
-          <div className="no-store">
-            <p>{t('storeManagement.title')}</p>
-          </div>
-        )}
-        
-        <div className="order-notification">
-          <h3>{t('orderNotification.title')}</h3>
-          <p>{isOrderNotificationEnabled ? t('orderNotification.enable') : t('orderNotification.disable')}</p>
-        </div>
-        
-        <div className="actions">
-          <button onClick={() => window.open('src/maximized/index.html', '_blank')}>
-            {t('productManagement.title')}
-          </button>
-        </div>
-      </main>
+    <div className="popup-app" style={{ padding: '20px', textAlign: 'center', minWidth: '300px' }}>
+      <h1>WooLite</h1>
+      {status === 'loading' && (
+        <>
+          <p>{t('common.loading')}...</p>
+          <p>正在打开最大化窗口...</p>
+        </>
+      )}
+      {status === 'error' && (
+        <>
+          <p style={{ color: 'red' }}>错误: {error}</p>
+          <p>请检查扩展权限或尝试重新加载扩展。</p>
+        </>
+      )}
     </div>
   )
 }

@@ -1,18 +1,18 @@
-// 多浏览器构建脚本
+// 多浏览器构建脚本 (仅支持Chrome和Edge)
 const fs = require('fs');
 const path = require('path');
 
-// 浏览器配置
+// 浏览器配置 (仅支持Chrome和Edge)
 const browsers = [
   { 
     name: 'chrome', 
     manifest: 'src/manifest.json',
-    targetDir: 'dist/chrome'
+    targetDir: 'dist/chrome-extension'
   },
-  { 
-    name: 'firefox', 
-    manifest: 'src/manifest.firefox.json',
-    targetDir: 'dist/firefox'
+  {
+    name: 'edge',
+    manifest: 'src/manifest.json',
+    targetDir: 'dist/edge-extension'
   }
 ];
 
@@ -30,14 +30,14 @@ function copyFile(src, dest) {
 }
 
 // 复制目录函数
-function copyDir(src, dest) {
+function copyDir(src, dest, skipDirs = []) {
   ensureDir(dest);
   
   const entries = fs.readdirSync(src, { withFileTypes: true });
   
   for (const entry of entries) {
-    // 跳过目标目录本身
-    if (entry.name === 'chrome' || entry.name === 'firefox') {
+    // 跳过指定的目录
+    if (skipDirs.includes(entry.name)) {
       continue;
     }
     
@@ -45,38 +45,65 @@ function copyDir(src, dest) {
     const destPath = path.join(dest, entry.name);
     
     if (entry.isDirectory()) {
-      copyDir(srcPath, destPath);
+      copyDir(srcPath, destPath, skipDirs);
     } else {
       copyFile(srcPath, destPath);
     }
   }
 }
 
-// 构建函数
-function buildForBrowser(browser) {
-  console.log(`Preparing ${browser.name} build...`);
-  
-  // 创建目标目录
-  ensureDir(browser.targetDir);
-  
-  // 复制对应的manifest文件
-  const manifestSrc = path.join(__dirname, '..', browser.manifest);
-  const manifestDest = path.join(__dirname, '..', browser.targetDir, 'manifest.json');
-  copyFile(manifestSrc, manifestDest);
-  
-  console.log(`${browser.name} preparation completed.`);
-}
-
 // 主函数
 function main() {
-  console.log('Starting multi-browser preparation...');
+  console.log('Starting Chrome/Edge preparation...');
   
-  // 为每个浏览器准备构建
+  // 清理旧的构建目录
+  const skipDirs = ['chrome-extension', 'edge-extension'];
+  const distPath = path.join(__dirname, '..', 'dist');
+  
   for (const browser of browsers) {
-    buildForBrowser(browser);
+    // 先确保目标目录存在
+    ensureDir(browser.targetDir);
+    
+    // 获取dist目录下的所有条目
+    if (fs.existsSync(distPath)) {
+      const entries = fs.readdirSync(distPath, { withFileTypes: true });
+      
+      for (const entry of entries) {
+        // 跳过浏览器特定目录和其他不需要的目录
+        if (skipDirs.includes(entry.name)) {
+          continue;
+        }
+        
+        const srcPath = path.join(distPath, entry.name);
+        const destPath = path.join(__dirname, '..', browser.targetDir, entry.name);
+        
+        // 特别检查避免复制到自身目录内
+        if (path.resolve(srcPath) === path.resolve(browser.targetDir)) {
+          continue;
+        }
+        
+        if (entry.isDirectory()) {
+          copyDir(srcPath, destPath, skipDirs);
+        } else {
+          copyFile(srcPath, destPath);
+        }
+      }
+    }
+    
+    // 复制对应的manifest文件
+    const manifestSrc = path.join(__dirname, '..', browser.manifest);
+    const manifestDest = path.join(__dirname, '..', browser.targetDir, 'manifest.json');
+    copyFile(manifestSrc, manifestDest);
+    
+    // 复制assets目录
+    const assetsSrc = path.join(__dirname, '..', 'src', 'assets');
+    const assetsDest = path.join(__dirname, '..', browser.targetDir, 'src', 'assets');
+    if (fs.existsSync(assetsSrc)) {
+      copyDir(assetsSrc, assetsDest);
+    }
   }
   
-  console.log('Multi-browser preparation completed.');
+  console.log('Chrome/Edge preparation completed.');
   console.log('To build the extension, run: npm run build');
   console.log('The build output will be automatically copied to the browser-specific directories.');
 }

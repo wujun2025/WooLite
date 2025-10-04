@@ -21,6 +21,7 @@ WooLite 是一个专为 WooCommerce 电商平台设计的轻量级 Chrome 扩展
 - Zustand (状态管理)
 - Vite (构建工具)
 - Chrome Extension Manifest V3
+- Ant Design Pro (UI组件库)
 
 ## 当前状态
 
@@ -30,6 +31,7 @@ WooLite 是一个专为 WooCommerce 电商平台设计的轻量级 Chrome 扩展
 - 多语言支持
 - 开发环境配置
 - 多浏览器兼容性支持
+- Ant Design Pro UI组件库集成
 
 开发服务器已可正常运行，可通过 `npm run dev` 启动。
 
@@ -45,7 +47,8 @@ WooLite 是一个专为 WooCommerce 电商平台设计的轻量级 Chrome 扩展
 ### 生产构建
 
 1. 构建项目：`npm run build`
-2. 构建产物位于 `dist` 目录
+2. 准备多浏览器版本：`npm run build:multi`
+3. 构建产物位于 `dist` 目录
 
 ### 加载扩展到浏览器
 
@@ -54,7 +57,7 @@ WooLite 是一个专为 WooCommerce 电商平台设计的轻量级 Chrome 扩展
 1. 打开浏览器，进入 `chrome://extensions/`
 2. 开启右上角的"开发者模式"
 3. 点击"加载已解压的扩展程序"
-4. 选择 `D:\alproject\WooLite\dist` 目录
+4. 选择 `D:\alproject\WooLite\dist\chrome-extension` 目录
 
 #### Firefox:
 
@@ -85,10 +88,30 @@ npm run build:multi
 ```
 
 构建完成后，会在 `dist` 目录下生成以下子目录：
-- `dist/chrome`: Chrome/Edge浏览器版本
-- `dist/firefox`: Firefox浏览器版本
+- `dist/chrome-extension`: Chrome/Edge浏览器版本
+- `dist/edge-extension`: Edge浏览器版本
 
 每个目录都包含相应浏览器所需的manifest文件和共享的构建产物。
+
+## 版本管理
+
+项目使用语义化版本控制，版本号格式为 `主版本号.次版本号.修订号`：
+
+- **主版本号**：重大功能更新或架构调整时增加
+- **次版本号**：新增功能或重要改进时增加
+- **修订号**：修复bug或小幅度改进时增加
+
+### 更新版本号
+
+使用以下命令自动更新版本号（修订号递增）：
+
+```bash
+npm run version
+```
+
+当前版本：v1.0.6
+
+版本更新记录请查看 [VERSION_LOG.md](VERSION_LOG.md) 文件。
 
 ## 设计文档
 
